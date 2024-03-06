@@ -8,7 +8,7 @@ import GUI from 'lil-gui'
 /* Vars & Function */
 let cursorX = 0
 let cursorY = 0
-
+/*
 window.addEventListener('mousemove', (event) => {
     // per avere cursorX da -1 a 1
     cursorX = ((event.clientX / sizes.width) - 0.5) * 2
@@ -17,8 +17,7 @@ window.addEventListener('mousemove', (event) => {
     pointLight.position.x = cursorX * 3
     pointLight.position.y = cursorY * 3
 })
-console.log(cursorX)
-
+*/
 /**
  * Base
  */
@@ -42,35 +41,32 @@ matcapTexture.colorSpace = THREE.SRGBColorSpace
  * Fonts
 */
 const fontLoader = new FontLoader()
-
-// OCCHIO BEVEL CAMBIA MISURE!!!!!
-/*
-font: font,
-size: 0.5,
-height: 0.2,
-curveSegments: 12,
-bevelEnabled: true,
-bevelThickness: 0.03,
-bevelSize: 0.02,
-bevelOffset: 0,
-bevelSegments: 5
-*/
 const params = {
     size: 1.2,
-    height: 0.05,
+    height: 0.06,
     curveSegments: 12,
     bevelEnabled: true,
-    bevelThickness: 0.1,
+    // misura per la z (la devo andare a sommare/sottrarre a height):
+    bevelThickness: 0.06,
+    // misura per x & y:
     bevelSize: 0.02,
     bevelOffset: 0,
-    bevelSegments: 10
+    // quanto è definito il bevel:
+    bevelSegments: 12,
 }
+const heightMinusThick = params.height - params.bevelThickness
+const heightX3MinusThick = (params.height - params.bevelThickness) *3
+const heightX2MinusThick = (params.height *2 - params.bevelThickness)
+const heightPlusThick = params.height + params.bevelThickness
+
+console.log(heightMinusThick)
+console.log(heightPlusThick)
 
 /* group */
 const letters = new THREE.Group()
 const groupS = new THREE.Group()
 const groupL = new THREE.Group()
-letters.position.z = params.height * 0.5
+// letters.position.z = heightPlusThick * 0.5
 letters.position.x = 0.3
 scene.add(letters)
 
@@ -81,11 +77,11 @@ fontLoader.load(
     (font) => {
 
         // geometry
-        const SGeometry = new TextGeometry('S',{font: font,size: params.size,height: params.height * 3,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
-        const IGeometry = new TextGeometry('I',{font: font,size: params.size,height: params.height,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
-        const LGeometry = new TextGeometry('L',{font: font,size: params.size,height: params.height * 2,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
-        const I2Geometry = new TextGeometry('I',{font: font,size: params.size,height: params.height,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
-        const KGeometry = new TextGeometry('K',{font: font,size: params.size,height: params.height,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
+        const SGeometry = new TextGeometry('E',{font: font,size: params.size,height: heightMinusThick,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
+        const IGeometry = new TextGeometry('P',{font: font,size: params.size,height: heightMinusThick,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
+        const LGeometry = new TextGeometry('I',{font: font,size: params.size,height: heightMinusThick,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
+        const I2Geometry = new TextGeometry('C',{font: font,size: params.size,height: heightMinusThick,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
+        const KGeometry = new TextGeometry('O',{font: font,size: params.size,height: heightMinusThick,curveSegments: params.curveSegments,bevelEnabled: params.bevelEnabled,bevelThickness: params.bevelThickness,bevelSize: params.bevelSize,bevelOffset: params.bevelOffset,bevelSegments: params.bevelSegments})
 
         SGeometry.center()
         IGeometry.center()
@@ -120,8 +116,8 @@ fontLoader.load(
         groupS.add(letterS)
         groupL.add(letterL)
 
-        groupS.position.z = params.height
-        groupL.position.z = params.height * 0.5
+        // groupS.position.z = params.bevelThickness *3
+        // groupL.position.z = params.bevelThickness * 0.5
 
         letters.add(groupS, letterI, groupL, letterI2, letterK)
     }
@@ -177,10 +173,10 @@ camera.position.z = 10
 scene.add(camera)
 
 // Controls
-/*
-*/
 const controls = new OrbitControls(camera, canvas)
 controls.enableDamping = true
+/*
+*/
 
 /**
  * Renderer
